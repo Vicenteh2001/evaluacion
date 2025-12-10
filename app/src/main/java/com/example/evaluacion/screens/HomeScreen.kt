@@ -34,7 +34,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 @Composable
 fun HomeScreen(
     nav: NavHostController,
-    viewModel: AuthViewModel
+    viewModel: AuthViewModel,
+    onLogoutDone: () -> Unit,
+    onLedClick: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -183,6 +185,12 @@ fun HomeScreen(
                         nav.navigate(Route.Sensors.route)
                     }
                 )
+                
+                MenuCard(
+                    title = "Control de LEDs IoT",
+                    subtitle = "Encender/apagar LEDs via MQTT/HTTP.",
+                    onClick = { onLedClick() }
+                )
 
                 MenuCard(
                     title = "Datos del desarrollador",
@@ -195,9 +203,7 @@ fun HomeScreen(
                 FilledTonalButton(
                     onClick = {
                         viewModel.logout()
-                        nav.navigate(Route.Login.route) {
-                            popUpTo(Route.Home.route) { inclusive = true }
-                        }
+                        onLogoutDone()
                     },
                     modifier = Modifier
                         .fillMaxWidth()

@@ -10,6 +10,7 @@ import com.example.evaluacion.auth.UsersViewModel
 import com.example.evaluacion.screens.ForgotPasswordEmailScreen
 import com.example.evaluacion.screens.ForgotPasswordCodeScreen
 import com.example.evaluacion.screens.ForgotPasswordResetScreen
+import com.example.evaluacion.screens.led.LedControlScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,10 +37,20 @@ fun AppNavGraph(
         }
 
         composable(Route.Home.route) {
-            HomeScreen(nav = navController, viewModel = authViewModel)
+            HomeScreen(
+                nav = navController, 
+                viewModel = authViewModel,
+                onLogoutDone = {
+                    navController.navigate(Route.Login.route) {
+                        popUpTo(Route.Home.route) { inclusive = true }
+                    }
+                },
+                onLedClick = {
+                    navController.navigate(Route.LedControl.route)
+                }
+            )
         }
 
-        // ===== Gestión de usuarios =====
         composable(Route.UsersMenu.route) {
             UsersMenuScreen(nav = navController)
         }
@@ -59,9 +70,14 @@ fun AppNavGraph(
             )
         }
 
-        // ===== Otros módulos =====
         composable(Route.Sensors.route) {
             SensorsScreen(nav = navController)
+        }
+
+        composable(Route.LedControl.route) {
+            LedControlScreen(
+                onBackClick = { navController.popBackStack() }
+            )
         }
 
         composable(Route.Developer.route) {

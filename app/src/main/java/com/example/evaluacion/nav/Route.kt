@@ -5,8 +5,7 @@ sealed class Route(val route: String) {
     object Login : Route("login")
     object Register : Route("register")
     object Home : Route("home")
-
-    data object LedControl : Route("ledControl")
+    object LedControl : Route("ledControl")
 
     object ForgotEmail : Route("forgot_email")
     object ForgotCode : Route("forgot_code")

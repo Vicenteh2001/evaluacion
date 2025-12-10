@@ -192,16 +192,6 @@ fun SensorsScreen(nav: NavHostController) {
                     Text(text = "• Nivel de luz: 720 lx (simulada)", color = Color(0xFF9CA3AF))
                 }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "La linterna se controla usando CameraManager.setTorchMode(), " +
-                        "lo que cumple con el requisito de usar un sensor / hardware del dispositivo.",
-                fontSize = 12.sp,
-                color = Color(0xFF6B7280),
-                textAlign = TextAlign.Center
-            )
         }
     }
 }
