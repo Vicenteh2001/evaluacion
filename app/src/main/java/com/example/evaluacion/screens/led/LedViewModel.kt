@@ -34,17 +34,9 @@ class LedViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             val leds = repository.getLeds()
 
-            var led1 = false
-            var led2 = false
-            var led3 = false
-
-            leds.forEach { led ->
-                when (led.id) {
-                    1 -> led1 = led.state
-                    2 -> led2 = led.state
-                    3 -> led3 = led.state
-                }
-            }
+            val led1 = leds.firstOrNull { it.name == "LED 1" }?.state ?: false
+            val led2 = leds.firstOrNull { it.name == "LED 2" }?.state ?: false
+            val led3 = leds.firstOrNull { it.name == "LED 3" }?.state ?: false
 
             _uiState.value = LedUiState(
                 isLoading = false,
@@ -52,7 +44,6 @@ class LedViewModel : ViewModel() {
                 led2 = led2,
                 led3 = led3
             )
-
         } catch (e: Exception) {
             _uiState.value = _uiState.value.copy(
                 isLoading = false,
@@ -60,13 +51,24 @@ class LedViewModel : ViewModel() {
             )
         }
     }
-
-    fun onToggleLed(id: Int, newState: Boolean) {
+    fun onToggleLed(ledNumber: Int, newState: Boolean) {
         viewModelScope.launch {
             try {
-                repository.updateLed(id, newState)
+                val leds = repository.getLeds()
+                val targetName = "LED $ledNumber"
+                val target = leds.firstOrNull { it.name == targetName }
+
+                if (target == null) {
+                    _uiState.value = _uiState.value.copy(
+                        error = "No se encontró $targetName"
+                    )
+                    return@launch
+                }
+
+                repository.updateLed(target.id, newState)
+
                 val current = _uiState.value
-                _uiState.value = when (id) {
+                _uiState.value = when (ledNumber) {
                     1 -> current.copy(led1 = newState)
                     2 -> current.copy(led2 = newState)
                     3 -> current.copy(led3 = newState)
@@ -74,7 +76,7 @@ class LedViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
-                    error = e.message ?: "Error al actualizar LED $id"
+                    error = e.message ?: "Error al actualizar LED"
                 )
             }
         }

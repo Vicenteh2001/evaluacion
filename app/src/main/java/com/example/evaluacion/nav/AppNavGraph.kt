@@ -12,6 +12,8 @@ import com.example.evaluacion.screens.ForgotPasswordCodeScreen
 import com.example.evaluacion.screens.ForgotPasswordResetScreen
 import com.example.evaluacion.screens.led.LedControlScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.evaluacion.screens.led.LedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,6 +98,10 @@ fun AppNavGraph(
                 nav = navController,
                 viewModel = authViewModel
             )
+        }
+        composable(Route.LedControl.route) {
+            val vm: LedViewModel = viewModel()
+            LedControlScreen(viewModel = vm)
         }
 
         composable(Route.ForgotReset.route) {
